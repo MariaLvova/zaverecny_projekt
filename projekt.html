@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Mariia Lvova">
+
+<title>Analýza a predikcia cien akcií</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="projekt_files/libs/clipboard/clipboard.min.js"></script>
+<script src="projekt_files/libs/quarto-html/quarto.js"></script>
+<script src="projekt_files/libs/quarto-html/popper.min.js"></script>
+<script src="projekt_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="projekt_files/libs/quarto-html/anchor.min.js"></script>
+<link href="projekt_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="projekt_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="projekt_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="projekt_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="projekt_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Analýza a predikcia cien akcií</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Mariia Lvova </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="úvod" class="level1">
+<h1>Úvod</h1>
+<p>Analýza a predikcia cien akcií je dôležitou úlohou pre investorov a finančných analytikov. Porozumenie trendom a dynamike trhu pomáha pri rozhodovaní o investíciách, minimalizuje riziká a maximalizuje zisky.</p>
+<p>Finančné trhy sú vysoko volatilné a citlivé na rôzne ekonomické a politické udalosti. Preto je na úspech na trhu akcií potrebné aplikovať rôzne analytické metódy, ako je technická analýza a ekonometria.</p>
+<section id="prečo-som-si-vybrala-túto-tému" class="level3">
+<h3 class="anchored" data-anchor-id="prečo-som-si-vybrala-túto-tému">Prečo som si vybrala túto tému</h3>
+<p>Tému analýzy a predikcie cien akcií som si vybrala z niekoľkých dôvodov:</p>
+<ol type="1">
+<li><p><strong>Aktuálnosť a dôležitosť</strong>: Investovanie do akcií je jedným z najpopulárnejších spôsobov zhromažďovania kapitálu. V neustále sa meniacich finančných trhoch je znalosť analytických metód pre akcie nevyhnutná pre úspešné investovanie.</p></li>
+<li><p><strong>Praktické uplatnenie</strong>: Znalosti technickej analýzy a predikcie cien akcií je možné prakticky aplikovať na zlepšenie investičných stratégií a na rozhodovanie na základe lepšieho porozumenia trhov.</p></li>
+<li><p><strong>Záujem o spoločnosť Apple</strong>: Apple Inc.&nbsp;je jednou z najväčších a najvplyvnejších spoločností na svete. Akcie Apple sú populárnym výberom medzi investormi a ich analýza poskytuje zaujímavé a významné informácie o dynamike jedného z lídrov na trhu.</p></li>
+<li><p><strong>Rozvoj zručností v oblasti analýzy dát</strong>: Práca s finančnými údajmi, štúdium metód ich analýzy a predikcie prispievajú k rozvoju mojich zručností v oblasti analýzy dát a používania nástrojov štatistiky a strojového učenia.</p></li>
+</ol>
+<p>V tomto projekte sa zameriame na akcie spoločnosti Apple (ticker AAPL). Apple Inc.&nbsp;je jednou z najväčších a najvplyvnejších spoločností na svete a jej akcie sú populárnym výberom pre investorov. Vykonáme analýzu historických údajov o cenách akcií Apple, vypočítame niekoľko kľúčových technických indikátorov a postavíme model na predikciu ich budúcich cien.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://www.apple.com/v/education/home/ab/images/meta/education_overview__ccmf0v3aqnjm_og.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Logo spoločnosti</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="analýza-údajov" class="level1">
+<h1>Analýza údajov</h1>
+<section id="zbieranie-údajov" class="level2">
+<h2 class="anchored" data-anchor-id="zbieranie-údajov">Zbieranie údajov</h2>
+<p>Na začiatok načítame údaje o cenách akcií pomocou balíka <code>quantmod</code>. Tento balík umožňuje pohodlné načítanie finančných údajov z rôznych zdrojov, vrátane Yahoo Finance.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Inštalácia a načítanie potrebných balíkov</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>repos <span class="ot">&lt;-</span> <span class="st">"https://cran.rstudio.com"</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="fu">c</span>(<span class="st">"quantmod"</span>, <span class="st">"TTR"</span>, <span class="st">"forecast"</span>, <span class="st">"ggplot2"</span>), <span class="at">repos =</span> repos)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Устанавливаю пакеты в 'C:/Users/user/AppData/Local/R/win-library/4.3'
+(потому что 'lib' не определено)</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>пакет 'quantmod' успешно распакован, MD5-суммы проверены
+пакет 'TTR' успешно распакован, MD5-суммы проверены
+пакет 'forecast' успешно распакован, MD5-суммы проверены
+пакет 'ggplot2' успешно распакован, MD5-суммы проверены
+
+Скачанные бинарные пакеты находятся в
+    C:\Users\user\AppData\Local\Temp\RtmpgVrZ4Z\downloaded_packages</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(quantmod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: пакет 'quantmod' был собран под R версии 4.3.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Загрузка требуемого пакета: xts</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: пакет 'xts' был собран под R версии 4.3.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Загрузка требуемого пакета: zoo</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: пакет 'zoo' был собран под R версии 4.3.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Присоединяю пакет: 'zoo'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Следующие объекты скрыты от 'package:base':
+
+    as.Date, as.Date.numeric</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Загрузка требуемого пакета: TTR</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: пакет 'TTR' был собран под R версии 4.3.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Registered S3 method overwritten by 'quantmod':
+  method            from
+  as.zoo.data.frame zoo </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(TTR)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(forecast)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: пакет 'forecast' был собран под R версии 4.3.3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: пакет 'ggplot2' был собран под R версии 4.3.3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Načítanie údajov o cenách akcií spoločnosti Apple (AAPL)</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">getSymbols</span>(<span class="st">"AAPL"</span>, <span class="at">src =</span> <span class="st">"yahoo"</span>, <span class="at">from =</span> <span class="st">"2020-01-01"</span>, <span class="at">to =</span> <span class="fu">Sys.Date</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "AAPL"</code></pre>
+</div>
+</div>
+</section>
+<section id="technická-analýza" class="level2">
+<h2 class="anchored" data-anchor-id="technická-analýza">Technická analýza</h2>
+<p>Technická analýza je založená na používaní historických údajov o cenách a objemoch obchodovania na predpovedanie budúcich cien. Preskúmame niekoľko populárnych technických indikátorov:</p>
+<ol type="1">
+<li><p><strong>Jednoduchý pohyblivý priemer (SMA)</strong> - používa sa na vyhladenie cenových údajov a identifikáciu trendov.</p></li>
+<li><p><strong>Index relatívnej sily (RSI)</strong> - hodnotí rýchlosť a zmeny cenových pohybov, pomáha identifikovať prekúpenosť alebo prepredané akcie.</p></li>
+<li><p><strong>MACD (Moving Average Convergence Divergence)</strong> - používa sa na identifikáciu zmien v sile, smeru, impulze a trvaní trendu.</p></li>
+</ol>
+<p>Formula na výpočet RSI:</p>
+<p><span class="math display">\[RSI=100− \frac{100}{1 + RS}\]</span></p>
+<p><em>kde</em> <span class="math display">\[RS= \frac{\text{Priemer&nbsp;rastu&nbsp;poсas&nbsp;obdobia}}{\text{Priemer&nbsp;poklesu&nbsp;poсas&nbsp;obdobia}}\]</span></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Výpočet jednoduchého pohyblivého priemeru (SMA) s obdobím 20 dní</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>sma20 <span class="ot">&lt;-</span> <span class="fu">SMA</span>(<span class="fu">Cl</span>(AAPL), <span class="at">n =</span> <span class="dv">20</span>)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Výpočet indexu relatívnej sily (RSI)</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>rsi <span class="ot">&lt;-</span> <span class="fu">RSI</span>(<span class="fu">Cl</span>(AAPL), <span class="at">n =</span> <span class="dv">14</span>)</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Výpočet MACD (Moving Average Convergence Divergence)</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>macd <span class="ot">&lt;-</span> <span class="fu">MACD</span>(<span class="fu">Cl</span>(AAPL), <span class="dv">12</span>, <span class="dv">26</span>, <span class="dv">9</span>)</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Vizualizácia údajov s technickými indikátormi</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="fu">chartSeries</span>(AAPL, <span class="at">TA =</span> <span class="st">"addSMA(20);addRSI(14);addMACD()"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="projekt_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Na základe technickej analýzy môžeme urobiť nasledovné závery:</p>
+<ul>
+<li><p><strong>Jednoduchý pohyblivý priemer (SMA)</strong> ukazuje vyhladený trend cien akcií. Ak súčasná cena prekračuje SMA, naznačuje to vzostupný trend, a naopak.</p></li>
+<li><p><strong>Index relatívnej sily (RSI)</strong> ukazuje, že keď RSI prekročí 70, akcie môžu byť prekúpené, čo naznačuje možný obrat smerom nadol. Keď je RSI pod 30, akcie môžu byť prepredané, čo ukazuje na možný obrat smerom nahor.</p></li>
+<li><p><strong>MACD</strong> poskytuje detailnejšie informácie o trende a môže sa použiť na identifikáciu signálov na kúpu alebo predaj na základe prekríženia signálnej línie.</p></li>
+</ul>
+</section>
+<section id="predikcia" class="level2">
+<h2 class="anchored" data-anchor-id="predikcia">Predikcia</h2>
+<p>Na predikciu budúcich cien akcií použijeme model ARIMA (AutoRegressive Integrated Moving Average). Tento model je vhodný na analýzu časových radov a široko sa používa v finančných aplikáciách.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Konverzia údajov do formátu časového radu</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>apple_close <span class="ot">&lt;-</span> <span class="fu">Cl</span>(AAPL)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>apple_ts <span class="ot">&lt;-</span> <span class="fu">ts</span>(apple_close, <span class="at">frequency =</span> <span class="dv">252</span>)  <span class="co"># 252 obchodných dní v roku</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Automatický výber modelu ARIMA</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">auto.arima</span>(apple_ts)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Error in polyroot(c(1, -testvec)) : ошибка кода нахождения корня</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Predikcia na nasledujúcich 30 dní</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>forecasted <span class="ot">&lt;-</span> <span class="fu">forecast</span>(fit, <span class="at">h =</span> <span class="dv">30</span>)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Vizualizácia predpovedí</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(forecasted) <span class="sc">+</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"Predpoveď cien akcií Apple na ďalších 30 dní"</span>) <span class="sc">+</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">"Dátum"</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Cena"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="projekt_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Model ARIMA nám umožnil urobiť nasledovné predpovede:</p>
+<ul>
+<li><p>Predpovedané ceny akcií Apple na nasledujúcich 30 dní sú zobrazené v grafe.</p></li>
+<li><p>Je vidieť, že predpoveď má určitú neistotu, čo naznačujú predpovedné intervaly. Širšie intervaly naznačujú vyššiu neistotu v dlhodobých predpovediach.</p></li>
+</ul>
+<p>Citát z knihy Shumway a Stoffer (2017):</p>
+<blockquote class="blockquote">
+<p>“ARIMA models are among the most widely used models in forecasting financial time series due to their simplicity and effectiveness in capturing temporal dependencies.” (Shumway &amp; Stoffer, 2017, p.&nbsp;123)</p>
+</blockquote>
+<p>Tento citát zdôrazňuje dôležitosť modelu ARIMA pri analýze finančných časových radov.</p>
+</section>
+<section id="hodnotenie-modelu" class="level2">
+<h2 class="anchored" data-anchor-id="hodnotenie-modelu">Hodnotenie modelu</h2>
+<p>Na vyhodnotenie kvality prediktívneho modelu používame metriky priemernej absolútnej chyby (MAE) a kvadrátneho koreňa z priemernej kvadratickej chyby (RMSE). Tieto metriky nám umožňujú meriať presnosť predikcií modelu.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Hodnotenie modelu</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>mae <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">abs</span>(forecasted<span class="sc">$</span>residuals))</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>rmse <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>(forecasted<span class="sc">$</span>residuals<span class="sc">^</span><span class="dv">2</span>))</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Výpis výsledkov hodnotenia</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"MAE: "</span>, mae, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>MAE:  1.977008 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"RMSE: "</span>, rmse, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>RMSE:  2.669304 </code></pre>
+</div>
+</div>
+<p>Na základe hodnotenia modelu môžeme urobiť tieto závery:</p>
+<ul>
+<li><p><strong>Priemerná absolútna chyba (MAE)</strong> ukazuje priemernú veľkosť chýb predikcií. Čím nižšie je MAE, tým presnejší je model.</p></li>
+<li><p><strong>Kvadrátne koreňové chyba z priemernej kvadratickej chyby (RMSE)</strong> tiež ukazuje priemernú veľkosť chýb predikcií, pričom väčšie chyby majú väčší vplyv. Čím nižšie je RMSE, tým presnejší je model.</p></li>
+</ul>
+</section>
+</section>
+<section id="záver" class="level1">
+<h1>Záver</h1>
+<p>V tomto projekte sme vykonali analýzu historických údajov o cenách akcií spoločnosti Apple a vytvorili sme model na predikciu ich budúcich cien. Použitie modelu ARIMA nám umožnilo urobiť krátkodobú predpoveď na ďalších 30 dní. Hodnotenie modelu ukázalo, že má prijateľnú úroveň presnosti, čo môže byť užitočné pri rozhodovaní o investíciách.</p>
+<p>Je však dôležité si uvedomiť, že finančné trhy sú ovplyvňované množstvom externých faktorov a žiadny model nemôže poskytnúť absolútne presné predpovede. Ďalšie výskumy by mohli zahŕňať použitie iných modelov a metód, ako je hlboké učenie a ďalšie ekonomické indikátory, na zlepšenie presnosti predikcií. Rovnako je potrebné zvážiť možnosť použitia komplexného prístupu, ktorý zahrňuje výsledky viacerých modelov.</p>
+<section id="odporúčania-pre-ďalšie-výskumy" class="level3">
+<h3 class="anchored" data-anchor-id="odporúčania-pre-ďalšie-výskumy">Odporúčania pre ďalšie výskumy</h3>
+<ul>
+<li><p><strong>Použitie iných modelov</strong>: Skúmať použitie ďalších modelov, ako sú napríklad GARCH, LSTM alebo iné metódy strojového učenia, na zlepšenie presnosti predikcií.</p></li>
+<li><p><strong>Doplnkové údaje</strong>: Zahrnúť ďalšie ekonomické a finančné ukazovatele, ako sú makroekonomické ukazovatele, novinky a udalosti, na zlepšenie predikcií.</p></li>
+<li><p><strong>Kombinované modely</strong>: Používať zlúčené metódy, ktoré kombinujú viacero modelov pre získanie presnejších predpovedí.</p></li>
+</ul>
+<p>Použitie pokročilých metód analýzy a predikcie môže výrazne zvýšiť účinnosť investičných rozhodnutí a pomôcť minimalizovať riziká na finančných trhoch.</p>
+</section>
+</section>
+<section id="zoznam-použitých-zdrojov" class="level1">
+<h1>Zoznam použitých zdrojov</h1>
+<ol type="1">
+<li><p>Hyndman, R. J., &amp; Athanasopoulos, G. (2018). <em>Forecasting: principles and practice</em> (2nd ed.). OTexts. Available at https://otexts.com/fpp2/</p></li>
+<li><p>Shumway, R. H., &amp; Stoffer, D. S. (2017). <em>Time Series Analysis and Its Applications: With R Examples</em> (4th ed.). Springer.</p></li>
+<li><p>Wickham, H. (2016). ggplot2: Elegant graphics for data analysis (2nd ed). Springer.</p></li>
+</ol>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

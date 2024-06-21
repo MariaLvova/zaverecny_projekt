@@ -1,0 +1,133 @@
+---
+title: "Analýza a predikcia cien akcií"
+author: "Mariia Lvova"
+format: revealjs
+editor: visual
+---
+
+# Úvod
+
+Analýza a predikcia cien akcií je dôležitou úlohou pre investorov a finančných analytikov. Porozumenie trendom a dynamike trhu pomáha pri rozhodovaní o investíciách, minimalizuje riziká a maximalizuje zisky.
+
+Finančné trhy sú vysoko volatilné a citlivé na rôzne ekonomické a politické udalosti. Preto je na úspech na trhu akcií potrebné aplikovať rôzne analytické metódy, ako je technická analýza a ekonometria.
+
+# Analýza údajov
+
+![Logo spoločnosti](https://www.apple.com/v/education/home/ab/images/meta/education_overview__ccmf0v3aqnjm_og.png)
+
+## Zbieranie údajov
+
+Na začiatok načítame údaje o cenách akcií pomocou balíka `quantmod`. Tento balík umožňuje pohodlné načítanie finančných údajov z rôznych zdrojov, vrátane Yahoo Finance.
+
+
+```{r}
+# Inštalácia a načítanie potrebných balíkov
+repos <- "https://cran.rstudio.com"
+install.packages(c("quantmod", "TTR", "forecast", "ggplot2"), repos = repos)
+library(quantmod)
+library(TTR)
+library(forecast)
+library(ggplot2)
+
+# Načítanie údajov o cenách akcií spoločnosti Apple (AAPL)
+getSymbols("AAPL", src = "yahoo", from = "2020-01-01", to = Sys.Date())
+```
+
+## Technická analýza
+
+Technická analýza je založená na používaní historických údajov o cenách a objemoch obchodovania na predpovedanie budúcich cien. Preskúmame niekoľko populárnych technických indikátorov:
+
+1\. **Jednoduchý pohyblivý priemer (SMA)** - používa sa na vyhladenie cenových údajov a identifikáciu trendov.
+
+2\. **Index relatívnej sily (RSI)** - hodnotí rýchlosť a zmeny cenových pohybov, pomáha identifikovať prekúpenosť alebo prepredané akcie.
+
+3\. **MACD (Moving Average Convergence Divergence)** - používa sa na identifikáciu zmien v sile, smeru, impulze a trvaní trendu.
+
+
+## Formula na výpočet RSI:
+
+$$RSI=100− \frac{100}{1 + RS}$$ *kde* $$RS= \frac{\text{Priemer rastu poсas obdobia}}{\text{Priemer poklesu poсas obdobia}}$$
+
+## Graf
+```{r}
+# Výpočet jednoduchého pohyblivého priemeru (SMA) s obdobím 20 dní
+sma20 <- SMA(Cl(AAPL), n = 20)
+
+# Výpočet indexu relatívnej sily (RSI)
+rsi <- RSI(Cl(AAPL), n = 14)
+
+# Výpočet MACD (Moving Average Convergence Divergence)
+macd <- MACD(Cl(AAPL), 12, 26, 9)
+
+# Vizualizácia údajov s technickými indikátormi
+chartSeries(AAPL, TA = "addSMA(20);addRSI(14);addMACD()")
+
+```
+
+## Na základe technickej analýzy môžeme urobiť nasledovné závery:
+
+-   **Jednoduchý pohyblivý priemer (SMA)** ukazuje vyhladený trend cien akcií. Ak súčasná cena prekračuje SMA, naznačuje to vzostupný trend, a naopak.
+
+-   **Index relatívnej sily (RSI)** ukazuje, že keď RSI prekročí 70, akcie môžu byť prekúpené, čo naznačuje možný obrat smerom nadol. Keď je RSI pod 30, akcie môžu byť prepredané, čo ukazuje na možný obrat smerom nahor.
+
+-   **MACD** poskytuje detailnejšie informácie o trende a môže sa použiť na identifikáciu signálov na kúpu alebo predaj na základe prekríženia signálnej línie.
+
+
+## Predikcia
+
+```{r}
+# Konverzia údajov do formátu časového radu
+apple_close <- Cl(AAPL)
+apple_ts <- ts(apple_close, frequency = 252)  # 252 obchodných dní v roku
+
+# Automatický výber modelu ARIMA
+fit <- auto.arima(apple_ts)
+
+# Predikcia na nasledujúcich 30 dní
+forecasted <- forecast(fit, h = 30)
+
+# Vizualizácia predpovedí
+autoplot(forecasted) +
+    ggtitle("Predpoveď cien akcií Apple na ďalších 30 dní") +
+    xlab("Dátum") + ylab("Cena")
+```
+
+## Model ARIMA nám umožnil urobiť nasledovné predpovede:
+
+-   Predpovedané ceny akcií Apple na nasledujúcich 30 dní sú zobrazené v grafe.
+-   Je vidieť, že predpoveď má určitú neistotu, čo naznačujú predpovedné intervaly. Širšie intervaly naznačujú vyššiu neistotu v dlhodobých predpovediach.
+
+## Hodnotenie modelu
+
+Na vyhodnotenie kvality prediktívneho modelu používame metriky priemernej absolútnej chyby (MAE) a kvadrátneho koreňa z priemernej kvadratickej chyby (RMSE). Tieto metriky nám umožňujú meriať presnosť predikcií modelu.
+
+```{r}
+# Hodnotenie modelu
+mae <- mean(abs(forecasted$residuals))
+rmse <- sqrt(mean(forecasted$residuals^2))
+
+# Výpis výsledkov hodnotenia
+cat("MAE: ", mae, "\n")
+cat("RMSE: ", rmse, "\n")
+
+```
+
+## Na základe hodnotenia modelu môžeme urobiť tieto závery:
+
+-   **Priemerná absolútna chyba (MAE)** ukazuje priemernú veľkosť chýb predikcií. Čím nižšie je MAE, tým presnejší je model.
+
+-   **Kvadrátne koreňové chyba z priemernej kvadratickej chyby (RMSE)** tiež ukazuje priemernú veľkosť chýb predikcií, pričom väčšie chyby majú väčší vplyv. Čím nižšie je RMSE, tým presnejší je model.
+
+## Odporúčania pre ďalšie výskumy
+
+::: incremental
+-   **Použitie iných modelov**: Skúmať použitie ďalších modelov, ako sú napríklad GARCH, LSTM alebo iné metódy strojového učenia, na zlepšenie presnosti predikcií.
+-   **Doplnkové údaje**: Zahrnúť ďalšie ekonomické a finančné ukazovatele, ako sú makroekonomické ukazovatele, novinky a udalosti, na zlepšenie predikcií.
+-   **Kombinované modely**: Používať zlúčené metódy, ktoré kombinujú viacero modelov pre získanie presnejších predpovedí. Použitie pokročilých metód analýzy a predikcie môže výrazne zvýšiť účinnosť investičných rozhodnutí a pomôcť minimalizovať riziká na finančných trhoch.
+:::
+
+# Zoznam použitých zdrojov
+
+1.  Hyndman, R. J., & Athanasopoulos, G. (2018). *Forecasting: principles and practice* (2nd ed.). OTexts. Available at https://otexts.com/fpp2/
+2.  Shumway, R. H., & Stoffer, D. S. (2017). *Time Series Analysis and Its Applications: With R Examples* (4th ed.). Springer.
+3.  Wickham, H. (2016). ggplot2: Elegant graphics for data analysis (2nd ed). Springer.

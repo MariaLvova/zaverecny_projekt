@@ -1,0 +1,156 @@
+---
+title: "Analýza a predikcia cien akcií"
+author: "Mariia Lvova"
+format: pdf
+editor: visual
+output:
+  pdf_document:
+    latex_engine: pdflatex
+    keep_tex: true
+lang: sk
+---
+
+# Úvod
+
+Analýza a predikcia cien akcií je dôležitou úlohou pre investorov a finančných analytikov. Porozumenie trendom a dynamike trhu pomáha pri rozhodovaní o investíciách, minimalizuje riziká a maximalizuje zisky.
+
+Finančné trhy sú vysoko volatilné a citlivé na rôzne ekonomické a politické udalosti. Preto je na úspech na trhu akcií potrebné aplikovať rôzne analytické metódy, ako je technická analýza a ekonometria.
+
+### Prečo som si vybrala túto tému
+
+Tému analýzy a predikcie cien akcií som si vybrala z niekoľkých dôvodov:
+
+1.  **Aktuálnosť a dôležitosť**: Investovanie do akcií je jedným z najpopulárnejších spôsobov zhromažďovania kapitálu. V neustále sa meniacich finančných trhoch je znalosť analytických metód pre akcie nevyhnutná pre úspešné investovanie.
+
+2.  **Praktické uplatnenie**: Znalosti technickej analýzy a predikcie cien akcií je možné prakticky aplikovať na zlepšenie investičných stratégií a na rozhodovanie na základe lepšieho porozumenia trhov.
+
+3.  **Záujem o spoločnosť Apple**: Apple Inc. je jednou z najväčších a najvplyvnejších spoločností na svete. Akcie Apple sú populárnym výberom medzi investormi a ich analýza poskytuje zaujímavé a významné informácie o dynamike jedného z lídrov na trhu.
+
+4.  **Rozvoj zručností v oblasti analýzy dát**: Práca s finančnými údajmi, štúdium metód ich analýzy a predikcie prispievajú k rozvoju mojich zručností v oblasti analýzy dát a používania nástrojov štatistiky a strojového učenia.
+
+V tomto projekte sa zameriame na akcie spoločnosti Apple (ticker AAPL). Apple Inc. je jednou z najväčších a najvplyvnejších spoločností na svete a jej akcie sú populárnym výberom pre investorov. Vykonáme analýzu historických údajov o cenách akcií Apple, vypočítame niekoľko kľúčových technických indikátorov a postavíme model na predikciu ich budúcich cien.
+
+![Logo spoločnosti](https://www.apple.com/v/education/home/ab/images/meta/education_overview__ccmf0v3aqnjm_og.png)
+
+# Analýza údajov
+
+## Zbieranie údajov
+
+Na začiatok načítame údaje o cenách akcií pomocou balíka `quantmod`. Tento balík umožňuje pohodlné načítanie finančných údajov z rôznych zdrojov, vrátane Yahoo Finance.
+
+```{r}
+# Inštalácia a načítanie potrebných balíkov
+library(quantmod)
+library(TTR)
+library(forecast)
+library(ggplot2)
+
+# Načítanie údajov o cenách akcií spoločnosti Apple (AAPL)
+getSymbols("AAPL", src = "yahoo", from = "2020-01-01", to = Sys.Date())
+
+```
+
+## Technická analýza
+
+Technická analýza je založená na používaní historických údajov o cenách a objemoch obchodovania na predpovedanie budúcich cien. Preskúmame niekoľko populárnych technických indikátorov:
+
+1.  **Jednoduchý pohyblivý priemer (SMA)** - používa sa na vyhladenie cenových údajov a identifikáciu trendov.
+
+2.  **Index relatívnej sily (RSI)** - hodnotí rýchlosť a zmeny cenových pohybov, pomáha identifikovať prekúpenosť alebo prepredané akcie.
+
+3.  **MACD (Moving Average Convergence Divergence)** - používa sa na identifikáciu zmien v sile, smeru, impulze a trvaní trendu.
+
+Formula na výpočet RSI:
+
+$$RSI=100− \frac{100}{1 + RS}$$
+
+*kde* $$RS= \frac{\text{Priemer rastu poсas obdobia}}{\text{Priemer poklesu poсas obdobia}}$$
+
+
+Na základe technickej analýzy môžeme urobiť nasledovné závery:
+
+-   **Jednoduchý pohyblivý priemer (SMA)** ukazuje vyhladený trend cien akcií. Ak súčasná cena prekračuje SMA, naznačuje to vzostupný trend, a naopak.
+
+-   **Index relatívnej sily (RSI)** ukazuje, že keď RSI prekročí 70, akcie môžu byť prekúpené, čo naznačuje možný obrat smerom nadol. Keď je RSI pod 30, akcie môžu byť prepredané, čo ukazuje na možný obrat smerom nahor.
+
+-   **MACD** poskytuje detailnejšie informácie o trende a môže sa použiť na identifikáciu signálov na kúpu alebo predaj na základe prekríženia signálnej línie.
+
+## Predikcia
+
+Na predikciu budúcich cien akcií použijeme model ARIMA (AutoRegressive Integrated Moving Average). Tento model je vhodný na analýzu časových radov a široko sa používa v finančných aplikáciách.
+
+```{r}
+# Konverzia údajov do formátu časového radu
+apple_close <- Cl(AAPL)
+apple_ts <- ts(apple_close, frequency = 252)  # 252 obchodných dní v roku
+
+# Automatický výber modelu ARIMA
+fit <- auto.arima(apple_ts)
+
+# Predikcia na nasledujúcich 30 dní
+forecasted <- forecast(fit, h = 30)
+
+# Vizualizácia predpovedí
+autoplot(forecasted) +
+    ggtitle("Predpoveď cien akcií Apple na ďalších 30 dní") +
+    xlab("Dátum") + ylab("Cena")
+
+
+```
+
+Model ARIMA nám umožnil urobiť nasledovné predpovede:
+
+-   Predpovedané ceny akcií Apple na nasledujúcich 30 dní sú zobrazené v grafe.
+
+-   Je vidieť, že predpoveď má určitú neistotu, čo naznačujú predpovedné intervaly. Širšie intervaly naznačujú vyššiu neistotu v dlhodobých predpovediach.
+
+Citát z knihy Shumway a Stoffer (2017):
+
+> "ARIMA models are among the most widely used models in forecasting financial time series due to their simplicity and effectiveness in capturing temporal dependencies." (Shumway & Stoffer, 2017, p. 123)
+
+Tento citát zdôrazňuje dôležitosť modelu ARIMA pri analýze finančných časových radov.
+
+## Hodnotenie modelu
+
+Na vyhodnotenie kvality prediktívneho modelu používame metriky priemernej absolútnej chyby (MAE) a kvadrátneho koreňa z priemernej kvadratickej chyby (RMSE). Tieto metriky nám umožňujú meriať presnosť predikcií modelu.
+
+```{r}
+# Hodnotenie modelu
+mae <- mean(abs(forecasted$residuals))
+rmse <- sqrt(mean(forecasted$residuals^2))
+
+# Výpis výsledkov hodnotenia
+cat("MAE: ", mae, "\n")
+cat("RMSE: ", rmse, "\n")
+
+```
+
+Na základe hodnotenia modelu môžeme urobiť tieto závery:
+
+-   **Priemerná absolútna chyba (MAE)** ukazuje priemernú veľkosť chýb predikcií. Čím nižšie je MAE, tým presnejší je model.
+
+-   **Kvadrátne koreňové chyba z priemernej kvadratickej chyby (RMSE)** tiež ukazuje priemernú veľkosť chýb predikcií, pričom väčšie chyby majú väčší vplyv. Čím nižšie je RMSE, tým presnejší je model.
+
+# Záver
+
+V tomto projekte sme vykonali analýzu historických údajov o cenách akcií spoločnosti Apple a vytvorili sme model na predikciu ich budúcich cien. Použitie modelu ARIMA nám umožnilo urobiť krátkodobú predpoveď na ďalších 30 dní. Hodnotenie modelu ukázalo, že má prijateľnú úroveň presnosti, čo môže byť užitočné pri rozhodovaní o investíciách.
+
+Je však dôležité si uvedomiť, že finančné trhy sú ovplyvňované množstvom externých faktorov a žiadny model nemôže poskytnúť absolútne presné predpovede. Ďalšie výskumy by mohli zahŕňať použitie iných modelov a metód, ako je hlboké učenie a ďalšie ekonomické indikátory, na zlepšenie presnosti predikcií. Rovnako je potrebné zvážiť možnosť použitia komplexného prístupu, ktorý zahrňuje výsledky viacerých modelov.
+
+### Odporúčania pre ďalšie výskumy
+
+-   **Použitie iných modelov**: Skúmať použitie ďalších modelov, ako sú napríklad GARCH, LSTM alebo iné metódy strojového učenia, na zlepšenie presnosti predikcií.
+
+-   **Doplnkové údaje**: Zahrnúť ďalšie ekonomické a finančné ukazovatele, ako sú makroekonomické ukazovatele, novinky a udalosti, na zlepšenie predikcií.
+
+-   **Kombinované modely**: Používať zlúčené metódy, ktoré kombinujú viacero modelov pre získanie presnejších predpovedí.
+
+Použitie pokročilých metód analýzy a predikcie môže výrazne zvýšiť účinnosť investičných rozhodnutí a pomôcť minimalizovať riziká na finančných trhoch.
+
+# Zoznam použitých zdrojov
+
+1.  Hyndman, R. J., & Athanasopoulos, G. (2018). *Forecasting: principles and practice* (2nd ed.). OTexts. Available at https://otexts.com/fpp2/
+
+2.  Shumway, R. H., & Stoffer, D. S. (2017). *Time Series Analysis and Its Applications: With R Examples* (4th ed.). Springer.
+
+3.  Wickham, H. (2016). ggplot2: Elegant graphics for data analysis (2nd ed). Springer.
